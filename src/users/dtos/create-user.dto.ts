@@ -10,5 +10,5 @@ export class CreateUserDto {
   @Length(6, 8)
   password: string;
 
-  role: string;
+  roles: string;
 }

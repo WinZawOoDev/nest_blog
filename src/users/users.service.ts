@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -24,10 +25,18 @@ export class UsersService {
     }
   }
 
+  findAdmin() {
+    return this.userModel.findOne({ roles: 'admin' }).exec();
+  }
+
   create(createUserDto: CreateUserDto) {
     try {
+      const salt = bcrypt.genSaltSync();
+      const password = bcrypt.hashSync(createUserDto.password, salt);
+      const createUser = { ...createUserDto, password };
+
       return this.userModel
-        .findOneAndUpdate({ email: createUserDto.email }, createUserDto, {
+        .findOneAndUpdate({ email: createUserDto.email }, createUser, {
           upsert: true,
           new: true,
         })
