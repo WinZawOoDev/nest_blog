@@ -12,6 +12,8 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enums/role.enum';
 
 @Controller('posts')
 export class PostsController {
@@ -22,6 +24,7 @@ export class PostsController {
     return this.postsService.create(createPostDto);
   }
 
+  @Roles(Role.User, Role.Admin)
   @Get()
   async findAll() {
     const posts = await this.postsService.findAll();

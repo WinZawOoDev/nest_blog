@@ -12,16 +12,24 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enums/role.enum';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Public()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
+    if (createUserDto.roles !== Role.User) {
+      throw new HttpException('role must be user', HttpStatus.NOT_ACCEPTABLE);
+    }
     return this.usersService.create(createUserDto);
   }
 
+  @Roles(Role.Admin)
   @Get()
   async findAll() {
     const users = await this.usersService.findAll();
@@ -34,7 +42,6 @@ export class UsersController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const user = await this.usersService.findOne(id);
-    console.log(user);
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
@@ -46,6 +53,7 @@ export class UsersController {
     return this.usersService.update(updateUserDto, id);
   }
 
+  @Roles(Role.Admin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);

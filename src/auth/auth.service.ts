@@ -5,7 +5,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
+import { Role } from './enums/role.enum';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -14,27 +17,54 @@ export class AuthService {
     private userService: UsersService,
   ) {}
 
+  async register(creatUserDto: CreateUserDto): Promise<any> {
+    const admin = await this.userService.findAdmin();
+    if (admin) {
+      throw new HttpException(
+        'Admin role already registered',
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    }
+    const createAdmin = await this.userService.create(creatUserDto);
+    if (createAdmin) {
+      return this.signToken({
+        id: createAdmin._id.toString(),
+        name: createAdmin.name,
+        email: createAdmin.email,
+        roles: createAdmin.roles,
+      });
+    }
+    return null;
+  }
+
   async signIn(email: string, pass: string): Promise<any> {
     const user = await this.userService.findOne(email);
-
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    if (user?.password !== pass) {
+
+    if (!bcrypt.compareSync(pass, user.password)) {
       throw new UnauthorizedException();
     }
 
-    const userInfo = {
+    return this.signToken({
       id: user._id.toString(),
       name: user.name,
       email: user.email,
-      role: user.role,
-    };
+      roles: user.roles,
+    });
+  }
 
-    const { id, ...rest } = userInfo;
+  async signToken(user: {
+    id: string;
+    name: string;
+    email: string;
+    roles: Role[];
+  }) {
+    const { id, ...rest } = user;
 
     return {
-      user: userInfo,
+      user,
       access_token: await this.jwtService.signAsync({
-        sub: user._id.toString(),
+        sub: user.id,
         ...rest,
       }),
     };
