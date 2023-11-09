@@ -10,7 +10,18 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   findAll() {
-    this.userModel.find();
+    return this.userModel.find();
+  }
+
+  findOne(id: string) {
+    try {
+      return this.userModel.findById(id);
+    } catch (error) {
+      throw new HttpException(
+        'Internal server errors',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   create(createUserDto: CreateUserDto) {
@@ -31,22 +42,15 @@ export class UsersService {
   }
 
   async update(updateUserDto: UpdateUserDto, id: string) {
-    try {
-      const user = await this.userModel.findById(id).exec();
-      if (!user) {
-        throw new HttpException('Error updating user', HttpStatus.NOT_FOUND);
-      }
-      user.name = updateUserDto.name;
-      return await user.save();
-    } catch (error) {
-      throw new HttpException(
-        'Internal server errors',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new HttpException('Updating user not found', HttpStatus.NOT_FOUND);
     }
+    user.name = updateUserDto.name;
+    return await user.save();
   }
 
-  delete(id: string) {
+  remove(id: string) {
     try {
       return this.userModel.deleteOne({ _id: id });
     } catch (error) {

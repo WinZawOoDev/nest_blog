@@ -9,7 +9,13 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     AuthModule,
     UsersModule,
-    MongooseModule.forRoot('mongodb://localhost/nest'),
+    MongooseModule.forRoot('mongodb://localhost:27017/nest_blog', {
+      connectionFactory: (connection) => {
+        connection.plugin(require('@meanie/mongoose-to-json'));
+        connection.plugin(require('mongoose-autopopulate'));
+        return connection;
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
