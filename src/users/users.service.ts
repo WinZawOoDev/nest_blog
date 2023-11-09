@@ -13,9 +13,9 @@ export class UsersService {
     return this.userModel.find();
   }
 
-  findOne(id: string) {
+  findOne(email: string) {
     try {
-      return this.userModel.findById(id);
+      return this.userModel.findOne({email});
     } catch (error) {
       throw new HttpException(
         'Internal server errors',
