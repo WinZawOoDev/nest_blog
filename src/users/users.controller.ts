@@ -12,7 +12,6 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { Public } from 'src/auth/decorators/public.decorator';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 
@@ -20,7 +19,7 @@ import { Role } from 'src/auth/enums/role.enum';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Public()
+  @Roles(Role.Admin)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     if (createUserDto.roles !== Role.User) {
