@@ -10,20 +10,17 @@ import { rmSpaces2lowerStr } from '../utils/index';
 export class PostsService {
   constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
 
-  create(createPostDto: CreatePostDto) {
-    try {
-      return this.postModel
-        .findOneAndUpdate({ title: createPostDto.title }, createPostDto, {
+  create(createPostDto: CreatePostDto, userId: string) {
+    return this.postModel
+      .findOneAndUpdate(
+        { title: createPostDto.title },
+        { ...createPostDto, user_id: new Types.ObjectId(userId) },
+        {
           upsert: true,
           new: true,
-        })
-        .exec();
-    } catch (error) {
-      throw new HttpException(
-        'Internal server error creating post',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+        },
+      )
+      .exec();
   }
 
   findAll() {
@@ -34,10 +31,10 @@ export class PostsService {
     return this.postModel.findById(id);
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto) {
+  async update(id: string, updatePostDto: UpdatePostDto, userId: string) {
     const post = await this.postModel.findById(id);
     if (!post) {
-      throw new HttpException('Updating post not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     }
     if (
       rmSpaces2lowerStr(post.title) === rmSpaces2lowerStr(updatePostDto.title)
@@ -50,7 +47,7 @@ export class PostsService {
     post.title = updatePostDto.title;
     post.body = updatePostDto.body;
     //@ts-ignore
-    post.user_id = new Types.ObjectId('654ca442641e1890d1f92ba0');
+    post.user_id = new Types.ObjectId(userId);
     post.updated_date = new Date();
     return await post.save();
   }

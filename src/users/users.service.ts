@@ -11,12 +11,12 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   findAll() {
-    return this.userModel.find();
+    return this.userModel.find().select(`-password`);
   }
 
   findOne(email: string) {
     try {
-      return this.userModel.findOne({ email });
+      return this.userModel.findOne({ email }).select(`-password`);
     } catch (error) {
       throw new HttpException(
         'Internal server errors',
@@ -26,28 +26,24 @@ export class UsersService {
   }
 
   findAdmin() {
-    return this.userModel.findOne({ roles: 'admin' }).exec();
+    return this.userModel
+      .findOne({ roles: 'admin' })
+      .select(`-password`)
+      .exec();
   }
 
   create(createUserDto: CreateUserDto) {
-    try {
-      const salt = bcrypt.genSaltSync();
-      const password = bcrypt.hashSync(createUserDto.password, salt);
-      const createUser = { ...createUserDto, password };
+    const salt = bcrypt.genSaltSync();
+    const password = bcrypt.hashSync(createUserDto.password, salt);
+    const createUser = { ...createUserDto, password };
 
-      return this.userModel
-        .findOneAndUpdate({ email: createUserDto.email }, createUser, {
-          upsert: true,
-          new: true,
-        })
-        .select(`-password`)
-        .exec();
-    } catch (error) {
-      throw new HttpException(
-        'Internal server errors',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.userModel
+      .findOneAndUpdate({ email: createUserDto.email }, createUser, {
+        upsert: true,
+        new: true,
+      })
+      .select(`-password`)
+      .exec();
   }
 
   async update(updateUserDto: UpdateUserDto, id: string) {
