@@ -9,12 +9,12 @@ import {
   HttpException,
   HttpStatus,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { Role } from 'src/auth/enums/role.enum';
+
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
@@ -24,7 +24,6 @@ export class PostsController {
     return this.postsService.create(createPostDto, req.user.sub);
   }
 
-  @Roles(Role.User, Role.Admin)
   @Get()
   async findAll() {
     const posts = await this.postsService.findAll();
@@ -35,7 +34,9 @@ export class PostsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Request() req, @Param('id') id: string) {
+    
+
     const post = await this.postsService.findOne(id);
     if (!post) {
       throw new HttpException('Post not found', HttpStatus.NOT_FOUND);

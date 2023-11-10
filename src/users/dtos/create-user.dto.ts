@@ -11,4 +11,6 @@ export class CreateUserDto {
   password: string;
 
   roles: string;
+
+  org_id: string;
 }
