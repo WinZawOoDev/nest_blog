@@ -10,11 +10,15 @@ import { rmSpaces2lowerStr } from '../utils/index';
 export class PostsService {
   constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
 
-  create(createPostDto: CreatePostDto, userId: string) {
+  create(createPostDto: CreatePostDto, userId: string, orgId: string) {
     return this.postModel
       .findOneAndUpdate(
         { title: createPostDto.title },
-        { ...createPostDto, user_id: new Types.ObjectId(userId) },
+        {
+          ...createPostDto,
+          user_id: new Types.ObjectId(userId),
+          org_id: new Types.ObjectId(orgId),
+        },
         {
           upsert: true,
           new: true,
@@ -29,6 +33,10 @@ export class PostsService {
 
   findOne(id: string) {
     return this.postModel.findById(id);
+  }
+
+  findByOrg(orgId: string) {
+    return this.postModel.find({ org_id: new Types.ObjectId(orgId) }).exec();
   }
 
   async findUserInfo(postId: string) {

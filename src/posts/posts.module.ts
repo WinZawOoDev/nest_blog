@@ -4,10 +4,12 @@ import { PostsController } from './posts.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Post, PostSchema } from './schemas/post.schema';
 import { CaslModule } from 'src/casl/casl.module';
+import { OrganizationsModule } from 'src/organizations/organizations.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
+    OrganizationsModule,
     CaslModule,
   ],
   controllers: [PostsController],

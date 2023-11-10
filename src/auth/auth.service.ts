@@ -9,6 +9,8 @@ import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { Role } from './enums/role.enum';
 import * as bcrypt from 'bcrypt';
+import { Organization } from 'src/organizations/schemas/organization.schema';
+import { RegisterDto } from './dot/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +19,7 @@ export class AuthService {
     private userService: UsersService,
   ) {}
 
-  async register(creatUserDto: CreateUserDto): Promise<any> {
+  async register(registerDto: RegisterDto): Promise<any> {
     const admin = await this.userService.findAdmin();
     if (admin) {
       throw new HttpException(
@@ -25,13 +27,17 @@ export class AuthService {
         HttpStatus.NOT_ACCEPTABLE,
       );
     }
-    const createAdmin = await this.userService.create(creatUserDto);
+    const createAdmin = await this.userService.create({
+      ...registerDto,
+      org_id: null,
+    });
     if (createAdmin) {
       return this.signToken({
         id: createAdmin._id.toString(),
         name: createAdmin.name,
         email: createAdmin.email,
         roles: createAdmin.roles,
+        org_id: createAdmin.org_id,
       });
     }
     return null;
@@ -50,6 +56,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       roles: user.roles,
+      org_id: user.org_id,
     });
   }
 
@@ -58,6 +65,7 @@ export class AuthService {
     name: string;
     email: string;
     roles: Role[];
+    org_id: Organization;
   }) {
     const { id, ...rest } = user;
 

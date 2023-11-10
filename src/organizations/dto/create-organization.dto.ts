@@ -4,7 +4,7 @@ export class CreateOrganizationDto {
   @Length(10, 20)
   name: string;
 
-  @Length(5, 20)
+  @Length(5, 50)
   service: string;
 
   @Length(2, 10)

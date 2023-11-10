@@ -14,17 +14,25 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
+import { OrganizationsService } from 'src/organizations/organizations.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly orgService: OrganizationsService,
+  ) {}
 
   @Roles(Role.Admin)
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    if (createUserDto.roles !== Role.User) {
+  async create(@Body() createUserDto: CreateUserDto) {
+    if (createUserDto.roles !== Role.User)
       throw new HttpException('role must be user', HttpStatus.NOT_ACCEPTABLE);
-    }
+
+    const org = await this.orgService.findOne(createUserDto.org_id);
+    if (!org)
+      throw new HttpException('Organization not found', HttpStatus.NOT_FOUND);
+
     return this.usersService.create(createUserDto);
   }
 
@@ -40,7 +48,7 @@ export class UsersController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const user = await this.usersService.findOne(id);
+    const user = await this.usersService.findById(id);
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
