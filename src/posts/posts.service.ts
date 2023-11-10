@@ -31,6 +31,28 @@ export class PostsService {
     return this.postModel.findById(id);
   }
 
+  async findUserInfo(postId: string) {
+    const info = await this.postModel.aggregate([
+      {
+        $match: { _id: new Types.ObjectId(postId) },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user_id',
+          foreignField: '_id',
+          as: 'user',
+          pipeline: [{ $project: { __v: 0 } }],
+        },
+      },
+      { $unwind: '$user' },
+    ]);
+    if (!info) {
+      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    }
+    return info[0];
+  }
+
   async update(id: string, updatePostDto: UpdatePostDto, userId: string) {
     const post = await this.postModel.findById(id);
     if (!post) {

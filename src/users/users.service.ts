@@ -18,6 +18,10 @@ export class UsersService {
     return this.userModel.findOne({ email }).exec();
   }
 
+  findById(id: string) {
+    return this.userModel.findById(id).exec();
+  }
+
   findAdmin() {
     return this.userModel
       .findOne({ roles: 'admin' })

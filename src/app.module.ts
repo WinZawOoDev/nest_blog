@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PostsModule } from './posts/posts.module';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { CaslModule } from './casl/casl.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
     }),
     PostsModule,
     OrganizationsModule,
+    CaslModule,
   ],
   controllers: [AppController],
   providers: [AppService],
