@@ -53,13 +53,6 @@ export class PostsService {
   }
 
   remove(id: string) {
-    try {
-      return this.postModel.deleteOne({ _id: id });
-    } catch (error) {
-      throw new HttpException(
-        'Internal server errors',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.postModel.deleteOne({ _id: id });
   }
 }

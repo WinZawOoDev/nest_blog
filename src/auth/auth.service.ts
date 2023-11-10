@@ -39,6 +39,7 @@ export class AuthService {
 
   async signIn(email: string, pass: string): Promise<any> {
     const user = await this.userService.findOne(email);
+    console.log(user);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
     if (!bcrypt.compareSync(pass, user.password)) {
