@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import { Organization } from 'src/organizations/schemas/organization.schema';
 import { User } from 'src/users/schemas/user.schema';
 
 export type PostDocument = HydratedDocument<Post>;
@@ -17,6 +18,14 @@ export class Post {
 
   @Prop({ required: true, default: null })
   updated_date: Date;
+
+  @Prop({
+    required: true,
+    type: Types.ObjectId,
+    ref: 'Organization',
+    default: null,
+  })
+  org_id: Organization;
 
   @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
   user_id: User;

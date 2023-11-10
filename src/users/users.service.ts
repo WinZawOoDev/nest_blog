@@ -19,7 +19,7 @@ export class UsersService {
   }
 
   findById(id: string) {
-    return this.userModel.findById(id).exec();
+    return this.userModel.findById(id).select('-password').exec();
   }
 
   findAdmin() {

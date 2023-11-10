@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 
-export class CreateUserDto {
-  @Length(2, 20)
+export class RegisterDto {
+  @Length(2, 10)
   name: string;
 
   @IsEmail()
@@ -12,7 +12,4 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   roles: string;
-
-  @IsNotEmpty()
-  org_id: string;
 }

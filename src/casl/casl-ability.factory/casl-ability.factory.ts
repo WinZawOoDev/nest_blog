@@ -5,7 +5,7 @@ import {
   Ability,
   ExtractSubjectType,
 } from '@casl/ability';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Action } from '../enums/action.enum';
 import { Post } from 'src/posts/schemas/post.schema';
 import { User } from 'src/users/schemas/user.schema';
@@ -35,6 +35,10 @@ export class CaslAbilityFactory {
       this.userServices.findById(userId),
       this.postServices.findUserInfo(postId),
     ]);
+
+    if (!currentUser) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
 
     //@ts-ignore
     if (currentUser.roles === Role.Admin) {

@@ -13,6 +13,8 @@ import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { Role } from './enums/role.enum';
+import { RegisterDto } from './dot/register.dto';
+import { SignInDto } from './dot/signin';
 
 @Controller('auth')
 export class AuthController {
@@ -21,17 +23,17 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.CREATED)
   @Post('register/admin')
-  register(@Body() createUserDto: CreateUserDto) {
-    if (createUserDto.roles !== Role.Admin) {
+  register(@Body() regiserDto: RegisterDto) {
+    if (regiserDto.roles !== Role.Admin) {
       throw new HttpException('Role must be admin', HttpStatus.NOT_ACCEPTABLE);
     }
-    return this.authService.register(createUserDto);
+    return this.authService.register(regiserDto);
   }
 
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
+  signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto.email, signInDto.password);
   }
 

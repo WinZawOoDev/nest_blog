@@ -27,7 +27,7 @@ export class OrganizationsService {
   }
 
   findOne(id: string) {
-    return this.orgModel.findById(id);
+    return this.orgModel.findById(id).exec();
   }
 
   async update(
