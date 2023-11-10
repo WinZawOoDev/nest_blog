@@ -17,6 +17,12 @@ export class User {
 
   @Prop({ required: true, type: String, enum: Role })
   roles: Role[];
+
+  @Prop({ required: true, default: new Date() })
+  created_date: Date;
+
+  @Prop({ required: true, default: null })
+  updated_date: Date;
 }
 
 export const UserShema = SchemaFactory.createForClass(User);

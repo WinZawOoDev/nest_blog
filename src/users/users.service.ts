@@ -15,14 +15,7 @@ export class UsersService {
   }
 
   findOne(email: string) {
-    try {
-      return this.userModel.findOne({ email }).select(`-password`);
-    } catch (error) {
-      throw new HttpException(
-        'Internal server errors',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.userModel.findOne({ email }).exec();
   }
 
   findAdmin() {
@@ -52,6 +45,7 @@ export class UsersService {
       throw new HttpException('Updating user not found', HttpStatus.NOT_FOUND);
     }
     user.name = updateUserDto.name;
+    user.updated_date = new Date();
     return await user.save();
   }
 
