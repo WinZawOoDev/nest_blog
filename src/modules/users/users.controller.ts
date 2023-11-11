@@ -17,6 +17,7 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 import { Roles } from 'src/modules/auth/decorators/roles.decorator';
 import { Role } from 'src/modules/auth/enums/role.enum';
 import { OrganizationsService } from 'src/modules/organizations/organizations.service';
+import { UpdateProfileDto } from './dtos/update-profile.dto';
 
 @Controller('users')
 export class UsersController {
@@ -24,6 +25,20 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly orgService: OrganizationsService,
   ) {}
+
+  @Get('/profile')
+  getProfile(@Request() req) {
+    return this.usersService.getProfile(req.user.sub);
+  }
+
+  @Put('/profile')
+  async editProfile(@Request() req, @Body() updateProfile: UpdateProfileDto) {
+    const updated = await this.usersService.update(updateProfile, req.user.sub);
+    if (updated) {
+      return this.usersService.getProfile(req.user.sub);
+    }
+    return null;
+  }
 
   @Roles(Role.Admin)
   @Post()
@@ -68,15 +83,5 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
-  }
-
-  @Get('/profile')
-  getProfile(@Request() req) {
-    return this.usersService.getProfile(req.user.sub);
-  }
-
-  @Put('/profile')
-  editProfile(@Request() req) {
-    return req.user;
   }
 }

@@ -12,15 +12,11 @@ import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { Role } from './enums/role.enum';
 import { RegisterDto } from './dot/register.dto';
-import { SignInDto } from './dot/signin';
-import { UsersService } from '../users/users.service';
+import { SignInDto } from './dot/signin.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private userService: UsersService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Public()
   @HttpCode(HttpStatus.CREATED)
@@ -38,5 +34,4 @@ export class AuthController {
   signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto.email, signInDto.password);
   }
-
 }
