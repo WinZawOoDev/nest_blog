@@ -46,17 +46,23 @@ export class CaslAbilityFactory {
 
     //@ts-ignore
     const isAdmin = currentUser.roles === Role.Admin;
+    const isSameOrg =
+      currentUser.org_id &&
+      post.org_id &&
+      currentUser.org_id.toString() === post?.org_id.toString();
 
-    if (currentUser.org_id.toString() === post?.org_id.toString() || isAdmin) {
-      can([Action.Read, Action.Update], Post);
+    const isSameUser = currentUser._id.toString() === post?.user_id.toString();
+
+    if (isSameOrg || isAdmin) {
+      can([Action.Read], Post);
     } else {
-      cannot([Action.Read, Action.Update], Post);
+      cannot([Action.Read, Action.Update, Action.Delete], Post);
     }
 
-    if (currentUser._id.toString() === post?.user_id.toString() || isAdmin) {
-      can(Action.Delete, Post);
+    if (isSameUser || isAdmin) {
+      can([Action.Update, Action.Delete], Post);
     } else {
-      cannot(Action.Delete, Post);
+      cannot([Action.Update, Action.Delete], Post);
     }
 
     return build({

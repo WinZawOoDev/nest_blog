@@ -4,6 +4,7 @@ import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Organization } from './schemas/organization.schema';
 import { Model, Types } from 'mongoose';
+import { rmSpaces2lowerStr } from 'src/utils';
 
 @Injectable()
 export class OrganizationsService {
@@ -51,9 +52,8 @@ export class OrganizationsService {
   ) {
     const org = await this.orgModel.findById(id);
     if (!org) {
-      throw new HttpException('Organizaton not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Organization not found', HttpStatus.NOT_FOUND);
     }
-
     org.name = updateOrgDto.name;
     org.service = updateOrgDto.service;
     org.industry = updateOrgDto.industry;

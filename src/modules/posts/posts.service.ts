@@ -4,7 +4,6 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Post } from './schemas/post.schema';
-import { rmSpaces2lowerStr } from '../../utils/index';
 
 @Injectable()
 export class PostsService {
@@ -17,7 +16,7 @@ export class PostsService {
         {
           ...createPostDto,
           user_id: new Types.ObjectId(userId),
-          org_id: new Types.ObjectId(orgId),
+          org_id: orgId ? new Types.ObjectId(orgId) : null,
         },
         {
           upsert: true,
@@ -61,23 +60,14 @@ export class PostsService {
     return info[0];
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto, userId: string) {
+  async update(id: string, updatePostDto: UpdatePostDto) {
     const post = await this.postModel.findById(id);
     if (!post) {
       throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     }
-    if (
-      rmSpaces2lowerStr(post.title) === rmSpaces2lowerStr(updatePostDto.title)
-    ) {
-      throw new HttpException(
-        'Title alreadey exists!',
-        HttpStatus.NOT_ACCEPTABLE,
-      );
-    }
+
     post.title = updatePostDto.title;
     post.body = updatePostDto.body;
-    //@ts-ignore
-    post.user_id = new Types.ObjectId(userId);
     post.updated_date = new Date();
     return await post.save();
   }

@@ -35,6 +35,7 @@ export class PostsController {
       if (!org)
         throw new HttpException('Organization not found', HttpStatus.NOT_FOUND);
     }
+    console.log(req.user);
     return this.postsService.create(
       createPostDto,
       req.user.sub,
@@ -77,7 +78,7 @@ export class PostsController {
     if (!ability.can(Action.Update, PostSchema)) {
       throw new ForbiddenException();
     }
-    return this.postsService.update(id, updatePostDto, req.user.sub);
+    return this.postsService.update(id, updatePostDto);
   }
 
   @Delete(':id')
