@@ -7,12 +7,12 @@ import {
 } from '@casl/ability';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Action } from '../enums/action.enum';
-import { Post } from 'src/posts/schemas/post.schema';
-import { User } from 'src/users/schemas/user.schema';
-import { Organization } from 'src/organizations/schemas/organization.schema';
-import { UsersService } from 'src/users/users.service';
-import { PostsService } from 'src/posts/posts.service';
-import { Role } from 'src/auth/enums/role.enum';
+import { Post } from '../../posts/schemas/post.schema';
+import { User } from '../../users/schemas/user.schema';
+import { Organization } from '../../organizations/schemas/organization.schema';
+import { UsersService } from '../../users/users.service';
+import { PostsService } from 'src/modules/posts/posts.service';
+import { Role } from 'src/modules/auth/enums/role.enum';
 
 type Subjects =
   | InferSubjects<typeof Post | typeof User | typeof Organization>

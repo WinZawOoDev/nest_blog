@@ -5,10 +5,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { Role } from './enums/role.enum';
 import * as bcrypt from 'bcrypt';
-import { Organization } from 'src/organizations/schemas/organization.schema';
+import { Organization } from '../organizations/schemas/organization.schema';
 import { RegisterDto } from './dot/register.dto';
 
 @Injectable()

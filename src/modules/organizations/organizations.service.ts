@@ -4,7 +4,6 @@ import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Organization } from './schemas/organization.schema';
 import { Model, Types } from 'mongoose';
-import { rmSpaces2lowerStr } from '../utils/index';
 
 @Injectable()
 export class OrganizationsService {

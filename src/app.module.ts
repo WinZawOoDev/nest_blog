@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PostsModule } from './posts/posts.module';
-import { OrganizationsModule } from './organizations/organizations.module';
-import { CaslModule } from './casl/casl.module';
+import { PostsModule } from './modules/posts/posts.module';
+import { OrganizationsModule } from './modules/organizations/organizations.module';
+import { CaslModule } from './modules/casl/casl.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 

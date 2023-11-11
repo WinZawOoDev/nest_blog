@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { Organization } from 'src/organizations/schemas/organization.schema';
-import { User } from 'src/users/schemas/user.schema';
+import { Organization } from '../../organizations/schemas/organization.schema';
+import { User } from '../../users/schemas/user.schema';
 
 export type PostDocument = HydratedDocument<Post>;
 
