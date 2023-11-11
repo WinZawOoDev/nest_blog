@@ -36,7 +36,6 @@ export class AuthService {
         name: createAdmin.name,
         email: createAdmin.email,
         roles: createAdmin.roles,
-        org_id: createAdmin.org_id,
       });
     }
     return null;
@@ -50,12 +49,15 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
+    //@ts-ignore
+    const isAdmin = user.roles === Role.Admin;
+
     return this.signToken({
       id: user._id.toString(),
       name: user.name,
       email: user.email,
       roles: user.roles,
-      org_id: user.org_id,
+      org_id: isAdmin ? null : user.org_id,
     });
   }
 
@@ -64,7 +66,7 @@ export class AuthService {
     name: string;
     email: string;
     roles: Role[];
-    org_id: Organization;
+    org_id?: Organization;
   }) {
     const { id, ...rest } = user;
 
