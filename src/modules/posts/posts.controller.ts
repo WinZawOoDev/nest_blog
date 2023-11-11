@@ -14,11 +14,11 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { CaslAbilityFactory } from 'src/casl/casl-ability.factory/casl-ability.factory';
-import { Action } from 'src/casl/enums/action.enum';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory/casl-ability.factory';
+import { Action } from '../casl/enums/action.enum';
 import { Post as PostSchema } from './schemas/post.schema';
-import { Role } from 'src/auth/enums/role.enum';
-import { OrganizationsService } from 'src/organizations/organizations.service';
+import { Role } from 'src/modules/auth/enums/role.enum';
+import { OrganizationsService } from '../organizations/organizations.service';
 
 @Controller('posts')
 export class PostsController {
@@ -77,12 +77,13 @@ export class PostsController {
     if (!ability.can(Action.Update, PostSchema)) {
       throw new ForbiddenException();
     }
-
     return this.postsService.update(id, updatePostDto, req.user.sub);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Request() req, @Param('id') id: string) {
+    const ability = await this.caslAbilityFactory.forUser(req.user.sub, id);
+    if (!ability.can(Action.Delete, PostSchema)) throw new ForbiddenException();
     return this.postsService.remove(id);
   }
 }

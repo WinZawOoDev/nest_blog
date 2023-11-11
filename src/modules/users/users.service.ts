@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from './schemas/user.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -29,10 +29,39 @@ export class UsersService {
       .exec();
   }
 
+  async getProfile(id: string) {
+    const userInfo = await this.userModel
+      .aggregate([
+        { $match: { _id: new Types.ObjectId(id) } },
+        {
+          $lookup: {
+            from: 'organizations',
+            localField: 'org_id',
+            foreignField: '_id',
+            as: 'orgnization',
+            pipeline: [{ $project: { __v: 0 } }],
+          },
+        },
+        {
+          $unwind: {
+            path: '$orgnization',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        { $project: { __v: 0, password: 0, org_id: 0 } },
+      ])
+      .exec();
+    return userInfo[0];
+  }
+
   create(createUserDto: CreateUserDto) {
     const salt = bcrypt.genSaltSync();
     const password = bcrypt.hashSync(createUserDto.password, salt);
-    const createUser = { ...createUserDto, password };
+    const createUser = {
+      ...createUserDto,
+      password,
+      org_id: new Types.ObjectId(createUserDto.org_id),
+    };
 
     return this.userModel
       .findOneAndUpdate({ email: createUserDto.email }, createUser, {

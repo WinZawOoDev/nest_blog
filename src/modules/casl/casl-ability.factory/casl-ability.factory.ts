@@ -7,12 +7,12 @@ import {
 } from '@casl/ability';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Action } from '../enums/action.enum';
-import { Post } from 'src/posts/schemas/post.schema';
-import { User } from 'src/users/schemas/user.schema';
-import { Organization } from 'src/organizations/schemas/organization.schema';
-import { UsersService } from 'src/users/users.service';
-import { PostsService } from 'src/posts/posts.service';
-import { Role } from 'src/auth/enums/role.enum';
+import { Post } from '../../posts/schemas/post.schema';
+import { User } from '../../users/schemas/user.schema';
+import { Organization } from '../../organizations/schemas/organization.schema';
+import { UsersService } from '../../users/users.service';
+import { PostsService } from 'src/modules/posts/posts.service';
+import { Role } from 'src/modules/auth/enums/role.enum';
 
 type Subjects =
   | InferSubjects<typeof Post | typeof User | typeof Organization>
@@ -31,22 +31,32 @@ export class CaslAbilityFactory {
       Ability<[Action, Subjects]>
     >(Ability as AbilityClass<AppAbility>);
 
-    const [currentUser, postUser] = await Promise.all([
+    const [currentUser, post] = await Promise.all([
       this.userServices.findById(userId),
-      this.postServices.findUserInfo(postId),
+      this.postServices.findOne(postId),
     ]);
 
     if (!currentUser) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
+    if (!post) {
+      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    }
+
     //@ts-ignore
-    if (currentUser.roles === Role.Admin) {
-      can(Action.Manage, 'all');
-    } else if (currentUser.org_id === postUser.user.org_id) {
-      can([Action.Read, Action.Update, Action.Delete], Post);
+    const isAdmin = currentUser.roles === Role.Admin;
+
+    if (currentUser.org_id.toString() === post?.org_id.toString() || isAdmin) {
+      can([Action.Read, Action.Update], Post);
     } else {
-      cannot([Action.Read, Action.Update, Action.Delete], Post);
+      cannot([Action.Read, Action.Update], Post);
+    }
+
+    if (currentUser._id.toString() === post?.user_id.toString() || isAdmin) {
+      can(Action.Delete, Post);
+    } else {
+      cannot(Action.Delete, Post);
     }
 
     return build({

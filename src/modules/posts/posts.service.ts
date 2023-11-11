@@ -4,7 +4,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Post } from './schemas/post.schema';
-import { rmSpaces2lowerStr } from '../utils/index';
+import { rmSpaces2lowerStr } from '../../utils/index';
 
 @Injectable()
 export class PostsService {
@@ -32,7 +32,7 @@ export class PostsService {
   }
 
   findOne(id: string) {
-    return this.postModel.findById(id);
+    return this.postModel.findById(id).exec();
   }
 
   findByOrg(orgId: string) {

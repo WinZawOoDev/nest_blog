@@ -3,8 +3,8 @@ import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Post, PostSchema } from './schemas/post.schema';
-import { CaslModule } from 'src/casl/casl.module';
-import { OrganizationsModule } from 'src/organizations/organizations.module';
+import { CaslModule } from '../casl/casl.module';
+import { OrganizationsModule } from '../organizations/organizations.module';
 
 @Module({
   imports: [

@@ -4,7 +4,6 @@ import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Organization } from './schemas/organization.schema';
 import { Model, Types } from 'mongoose';
-import { rmSpaces2lowerStr } from '../utils/index';
 
 @Injectable()
 export class OrganizationsService {
@@ -26,8 +25,23 @@ export class OrganizationsService {
     return this.orgModel.find();
   }
 
-  findOne(id: string) {
-    return this.orgModel.findById(id).exec();
+  async findOne(id: string) {
+    const org = await this.orgModel
+      .aggregate([
+        { $match: { _id: new Types.ObjectId(id) } },
+        {
+          $lookup: {
+            from: 'users',
+            localField: '_id',
+            foreignField: 'org_id',
+            as: 'users',
+            pipeline: [{ $project: { __v: 0, password: 0, org_id: 0 } }],
+          },
+        },
+        { $project: { __v: 0 } },
+      ])
+      .exec();
+    return org[0];
   }
 
   async update(

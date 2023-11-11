@@ -1,8 +1,8 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { CaslAbilityFactory } from './casl-ability.factory/casl-ability.factory';
-import { UsersModule } from 'src/users/users.module';
-import { PostsModule } from 'src/posts/posts.module';
-import { OrganizationsModule } from 'src/organizations/organizations.module';
+import { UsersModule } from '../users/users.module';
+import { PostsModule } from '../posts/posts.module';
+import { OrganizationsModule } from '../organizations/organizations.module';
 
 @Module({
   imports: [
