@@ -5,7 +5,6 @@ import {
   Post,
   Body,
   Get,
-  UseGuards,
   Request,
   HttpException,
 } from '@nestjs/common';
@@ -15,10 +14,14 @@ import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { Role } from './enums/role.enum';
 import { RegisterDto } from './dot/register.dto';
 import { SignInDto } from './dot/signin';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UsersService,
+  ) {}
 
   @Public()
   @HttpCode(HttpStatus.CREATED)
@@ -39,6 +42,6 @@ export class AuthController {
 
   @Get('profile')
   getProfile(@Request() req) {
-    return req.user;
+    return this.userService.getProfile(req.user.sub);
   }
 }

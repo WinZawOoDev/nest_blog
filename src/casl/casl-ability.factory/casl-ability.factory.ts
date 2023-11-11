@@ -31,22 +31,32 @@ export class CaslAbilityFactory {
       Ability<[Action, Subjects]>
     >(Ability as AbilityClass<AppAbility>);
 
-    const [currentUser, postUser] = await Promise.all([
+    const [currentUser, post] = await Promise.all([
       this.userServices.findById(userId),
-      this.postServices.findUserInfo(postId),
+      this.postServices.findOne(postId),
     ]);
 
     if (!currentUser) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
+    if (!post) {
+      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    }
+
     //@ts-ignore
-    if (currentUser.roles === Role.Admin) {
-      can(Action.Manage, 'all');
-    } else if (currentUser.org_id === postUser.user.org_id) {
-      can([Action.Read, Action.Update, Action.Delete], Post);
+    const isAdmin = currentUser.roles === Role.Admin;
+
+    if (currentUser.org_id.toString() === post?.org_id.toString() || isAdmin) {
+      can([Action.Read, Action.Update], Post);
     } else {
-      cannot([Action.Read, Action.Update, Action.Delete], Post);
+      cannot([Action.Read, Action.Update], Post);
+    }
+
+    if (currentUser._id.toString() === post?.user_id.toString() || isAdmin) {
+      can(Action.Delete, Post);
+    } else {
+      cannot(Action.Delete, Post);
     }
 
     return build({

@@ -32,7 +32,7 @@ export class PostsService {
   }
 
   findOne(id: string) {
-    return this.postModel.findById(id);
+    return this.postModel.findById(id).exec();
   }
 
   findByOrg(orgId: string) {

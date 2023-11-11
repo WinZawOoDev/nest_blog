@@ -1,7 +1,7 @@
 import { Length } from 'class-validator';
 
 export class CreatePostDto {
-  @Length(5, 20)
+  @Length(5, 50)
   title: string;
 
   @Length(200, 2000)

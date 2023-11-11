@@ -77,12 +77,13 @@ export class PostsController {
     if (!ability.can(Action.Update, PostSchema)) {
       throw new ForbiddenException();
     }
-
     return this.postsService.update(id, updatePostDto, req.user.sub);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Request() req, @Param('id') id: string) {
+    const ability = await this.caslAbilityFactory.forUser(req.user.sub, id);
+    if (!ability.can(Action.Delete, PostSchema)) throw new ForbiddenException();
     return this.postsService.remove(id);
   }
 }
