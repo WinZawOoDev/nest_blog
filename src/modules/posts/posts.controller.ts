@@ -35,7 +35,6 @@ export class PostsController {
       if (!org)
         throw new HttpException('Organization not found', HttpStatus.NOT_FOUND);
     }
-    console.log(req.user);
     return this.postsService.create(
       createPostDto,
       req.user.sub,
@@ -59,7 +58,10 @@ export class PostsController {
   async findOne(@Request() req, @Param('id') id: string) {
     const ability = await this.caslAbilityFactory.forUser(req.user.sub, id);
     if (!ability.can(Action.Read, PostSchema)) {
-      throw new ForbiddenException();
+      throw new HttpException(
+        `don't have permission to read`,
+        HttpStatus.FORBIDDEN,
+      );
     }
     const post = await this.postsService.findOne(id);
     if (!post) {
@@ -76,7 +78,10 @@ export class PostsController {
   ) {
     const ability = await this.caslAbilityFactory.forUser(req.user.sub, id);
     if (!ability.can(Action.Update, PostSchema)) {
-      throw new ForbiddenException();
+      throw new HttpException(
+        `don't have permission to update`,
+        HttpStatus.FORBIDDEN,
+      );
     }
     return this.postsService.update(id, updatePostDto);
   }
@@ -84,7 +89,11 @@ export class PostsController {
   @Delete(':id')
   async remove(@Request() req, @Param('id') id: string) {
     const ability = await this.caslAbilityFactory.forUser(req.user.sub, id);
-    if (!ability.can(Action.Delete, PostSchema)) throw new ForbiddenException();
+    if (!ability.can(Action.Delete, PostSchema))
+      throw new HttpException(
+        `don't have permission to delete`,
+        HttpStatus.FORBIDDEN,
+      );
     return this.postsService.remove(id);
   }
 }
