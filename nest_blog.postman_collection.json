@@ -1,0 +1,540 @@
+{
+	"info": {
+		"_postman_id": "fc9fa626-8e47-4cdb-884f-9205935e2ea2",
+		"name": "nest_blog",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register-admin",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jack\",\n    \"email\": \"jack@mail.com\",\n    \"password\": \"password\",\n    \"roles\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}api/v1/auth/register/admin",
+							"host": [
+								"{{base_url}}api"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"register",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signin-admin|user",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"jack@mail.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}api/v1/auth/login",
+							"host": [
+								"{{base_url}}api"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "organizations",
+					"item": [
+						{
+							"name": "organizations",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}api/v1/organizations",
+									"host": [
+										"{{base_url}}api"
+									],
+									"path": [
+										"v1",
+										"organizations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "organizations",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Maginify Myanmar\",\n    \"service\": \"IT Consulting\",\n    \"industry\": \"IT/Computer\",\n    \"size\": 20\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}api/v1/organizations",
+									"host": [
+										"{{base_url}}api"
+									],
+									"path": [
+										"v1",
+										"organizations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "organizations",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Innova Solutions\",\n    \"service\": \"IT Consulting & Social Monitering\",\n    \"industry\": \"AI/IT\",\n    \"size\": 20\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}api/v1/organizations/654f1795a5a3ec8b53258dc6",
+									"host": [
+										"{{base_url}}api"
+									],
+									"path": [
+										"v1",
+										"organizations",
+										"654f1795a5a3ec8b53258dc6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "organization",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}api/v1/organizations/654f351980913b46ec5e27fd",
+									"host": [
+										"{{base_url}}api"
+									],
+									"path": [
+										"v1",
+										"organizations",
+										"654f351980913b46ec5e27fd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "organizations",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}api/v1/organizations/654f1795a5a3ec8b53258dc6",
+									"host": [
+										"{{base_url}}api"
+									],
+									"path": [
+										"v1",
+										"organizations",
+										"654f1795a5a3ec8b53258dc6"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "users",
+					"item": [
+						{
+							"name": "users",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}api/v1/users",
+									"host": [
+										"{{base_url}}api"
+									],
+									"path": [
+										"v1",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}api/v1/users/654f1bcaa5a3ec8b532590dd",
+									"host": [
+										"{{base_url}}api"
+									],
+									"path": [
+										"v1",
+										"users",
+										"654f1bcaa5a3ec8b532590dd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "users",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Snow\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}api/v1/users/654f1b13a5a3ec8b53259054",
+									"host": [
+										"{{base_url}}api"
+									],
+									"path": [
+										"v1",
+										"users",
+										"654f1b13a5a3ec8b53259054"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "users",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}api/v1/users/654f1b13a5a3ec8b53259054",
+									"host": [
+										"{{base_url}}api"
+									],
+									"path": [
+										"v1",
+										"users",
+										"654f1b13a5a3ec8b53259054"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Rain\",\n    \"email\": \"rain@mail.com\",\n    \"password\": \"password\",\n    \"roles\": \"user\",\n    \"org_id\": \"654f376e80913b46ec5e2996\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}api/v1/users",
+									"host": [
+										"{{base_url}}api"
+									],
+									"path": [
+										"v1",
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "posts",
+			"item": [
+				{
+					"name": "posts",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}api/v1/posts",
+							"host": [
+								"{{base_url}}api"
+							],
+							"path": [
+								"v1",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}api/v1/posts/654f3cb780913b46ec5e2d48",
+							"host": [
+								"{{base_url}}api"
+							],
+							"path": [
+								"v1",
+								"posts",
+								"654f3cb780913b46ec5e2d48"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "posts",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"CQRS explanations & MicroServices\",\n    \"body\": \"CQRS stands for Command and Query Responsibility Segregation, a pattern that separates read and update operations for a data store. Implementing CQRS in your application can maximize its performance, scalability, and security.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}api/v1/posts",
+							"host": [
+								"{{base_url}}api"
+							],
+							"path": [
+								"v1",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "posts",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Monolithic\",\n    \"body\": \"Monolithic Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}api/v1/posts/654f360880913b46ec5e289b",
+							"host": [
+								"{{base_url}}api"
+							],
+							"path": [
+								"v1",
+								"posts",
+								"654f360880913b46ec5e289b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "posts",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}api/v1/posts/654f3bf380913b46ec5e2cb4",
+							"host": [
+								"{{base_url}}api"
+							],
+							"path": [
+								"v1",
+								"posts",
+								"654f3bf380913b46ec5e2cb4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "profiles",
+			"item": [
+				{
+					"name": "profile",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Snow\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}api/v1/users/profile",
+							"host": [
+								"{{base_url}}api"
+							],
+							"path": [
+								"v1",
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "profile",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}api/v1/users/profile",
+							"host": [
+								"{{base_url}}api"
+							],
+							"path": [
+								"v1",
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
