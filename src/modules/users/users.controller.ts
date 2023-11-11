@@ -8,6 +8,8 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Request,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -27,7 +29,7 @@ export class UsersController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     if (createUserDto.roles !== Role.User)
-      throw new HttpException('role must be user', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Role must be user', HttpStatus.NOT_ACCEPTABLE);
 
     const org = await this.orgService.findOne(createUserDto.org_id);
     if (!org)
@@ -46,6 +48,7 @@ export class UsersController {
     return users;
   }
 
+  @Roles(Role.Admin)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const user = await this.usersService.findById(id);
@@ -55,6 +58,7 @@ export class UsersController {
     return user;
   }
 
+  @Roles(Role.Admin)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(updateUserDto, id);
@@ -64,5 +68,15 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+
+  @Get('/profile')
+  getProfile(@Request() req) {
+    return this.usersService.getProfile(req.user.sub);
+  }
+
+  @Put('/profile')
+  editProfile(@Request() req) {
+    return req.user;
   }
 }
