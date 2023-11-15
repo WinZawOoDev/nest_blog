@@ -53,12 +53,13 @@ export class PostsController {
   @Get()
   async findAll(@Request() req) {
     if (req.user.roles === Role.Admin) {
-      const posts_cache = await this.cacheService.get('posts');
+      const cacheKey = 'posts';
+      const posts_cache = await this.cacheService.get(cacheKey);
       if (posts_cache) {
         return posts_cache;
       } else {
         const posts = await this.postsService.findAll();
-        await this.cacheService.set('posts', posts);
+        await this.cacheService.set(cacheKey, posts);
         return posts;
       }
     } else {
