@@ -1,0 +1,47 @@
+version: '3.5'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+      - cache
+    volumes:
+      - .:/src
+    networks:
+      - node-network
+  db:
+    image: mongo:7-jammy
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - blog-data:/data/db
+    networks:
+      - node-network
+  cache:
+    image: redis:7.2-alpine
+    restart: always
+    expose:
+      - 6379
+    ports:
+      - 6379:6379
+    volumes:
+      - blog-cache:/data/cache
+    networks:
+      - node-network
+volumes:
+  blog-data:
+    driver: local
+  blog-cache:
+    driver: local
+
+networks:
+  node-network:
+    driver: bridge
