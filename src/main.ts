@@ -14,6 +14,6 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.use(helmet());
-  await app.listen(5000);
+  await app.listen(parseInt(process.env.PORT));
 }
 bootstrap();

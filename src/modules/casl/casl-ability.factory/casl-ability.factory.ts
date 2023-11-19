@@ -5,7 +5,7 @@ import {
   Ability,
   ExtractSubjectType,
 } from '@casl/ability';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Action } from '../enums/action.enum';
 import { Post } from '../../posts/schemas/post.schema';
 import { User } from '../../users/schemas/user.schema';
@@ -13,6 +13,8 @@ import { Organization } from '../../organizations/schemas/organization.schema';
 import { UsersService } from '../../users/users.service';
 import { PostsService } from 'src/modules/posts/posts.service';
 import { Role } from 'src/modules/auth/enums/role.enum';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 type Subjects =
   | InferSubjects<typeof Post | typeof User | typeof Organization>
@@ -24,6 +26,7 @@ export class CaslAbilityFactory {
   constructor(
     private userServices: UsersService,
     private postServices: PostsService,
+    @Inject(CACHE_MANAGER) cacheService: Cache,
   ) {}
 
   async forUser(userId: string, postId: string) {
