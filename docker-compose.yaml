@@ -13,7 +13,8 @@ services:
       - db
       - cache
     volumes:
-      - .:/src
+      - .:/usr/src/app
+    restart: unless-stopped
     networks:
       - node-network
   db:
