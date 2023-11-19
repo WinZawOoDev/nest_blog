@@ -10,4 +10,6 @@ COPY . .
 
 EXPOSE 5000
 
-CMD [ "npm", "run", "start:dev" ]
+RUN npm run build
+
+ENTRYPOINT ["/bin/sh", "-c", "npm run start:dev"]
